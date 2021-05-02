@@ -52,7 +52,8 @@
 			$password = md5(md5(md5($password)));
 			$sql = "insert into accountcus(ID, usernameCus, password, email, fullname, sex, phonenumber, created_at, updated_at ) values ('','$usr', '$password', '$email', '$fullname', '$sex', '$phone', '', '')";
             execute($sql);
-            $idCus = "select ID from accountcus where fullname = $fullname and email = $email";
+            $result = "select ID from accountcus where email = '$email'";
+            $idCus = executeResult($result);
             $sql1 = "insert into address(id, idCus, province, district, wards, street) values ('', '$idCus', '$city', '$district', '', '$address1 & $address2' )";			
             execute($sql1);
 			header('Location: index.php');
@@ -653,13 +654,11 @@
                                                         </div>  
                                                         <label class="lebel-abs" style="width: fit-content; font-size: 14px;">
                                                             Giới tính
-                                                            <strong class="red">
                                                                 <select name="sex">
                                                                     <option value="Nam">Nam</option>
                                                                     <option value="Nữ">Nữ</option>
                                                                 </select>
-                                                                <input type="hidden"> 
-                                                            </strong>   
+                                                                <input type="hidden">   
                                                         </label>                                                                                                       
                                                         <div class="pass-wrap">
                                                             <div class="form-row">
@@ -707,16 +706,16 @@
                                                         <label class="lebel-abs" style="width: fit-content; font-size: 14px;">
                                                             Thành phố
                                                                 <select name="calc_shipping_provinces">
-                                                                    <option>Tỉnh / Thành phố</option>
+                                                                    <option value="">Tỉnh / Thành phố</option>
                                                                 </select>
-                                                                <input class ="billing_address_1" type="hidden" value=""> 
+                                                                <input class="billing_address_1" type="hidden"> 
                                                         </label>                          
                                                         <label class="lebel-abs" style="width: fit-content; font-size: 14px;">
-                                                                Quận/Huyện
+                                                            Quận/Huyện
                                                                 <select name="calc_shipping_district">
-                                                                    <option>Quận / Huyện</option>
+                                                                    <option value="">Quận / Huyện</option>
                                                                 </select> 
-                                                                <input class="billing_address_2" type="hidden" value="">
+                                                                <input class="billing_address_2" type="hidden">
                                                         </label>
                                                         <div class="form-row">
                                                             <label class="lebel-abs">
@@ -745,7 +744,7 @@
                                                             </span>
                                                         </p>
                                                         <button type="submit" class="btn btn-success">Đăng ký</button>
-                                                        <button type="reset" class="btn btn-success" onclick="reload()">Hủy</button>
+                                                        <button type="reset" class="btn btn-success">Hủy</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -755,20 +754,20 @@
                                 <!--js-->
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
 <script src='js/districts.min.js'></script>
-<script>
-        if (address_2 = localStorage.getItem('address_2_saved')) {
-            $('select[name="calc_shipping_district"] option').each(function() {
+<<script>
+        /*if (address_2 = localStorage.getItem('address_2_saved')) {
+            /*$('select[name="calc_shipping_district"] option').each(function() {
                 if ($(this).text() == address_2) {
-                $(this).attr('selected', '')
+                    $(this).attr('selected', '')
                 }
-            })
-            $('input.billing_address_2').attr('value', address_2)
-        }
+            })*/
+            //$('input.billing_address_2').attr('value', address_2)
+        //}
         if (district = localStorage.getItem('district')) {
             $('select[name="calc_shipping_district"]').html(district)
             $('select[name="calc_shipping_district"]').on('change', function() {
                 var target = $(this).children('option:selected')
-                target.attr('selected', '')
+                //target.attr('selected', '')
                 $('select[name="calc_shipping_district"] option').not(target).removeAttr('selected')
                 address_2 = target.text()
                 $('input.billing_address_2').attr('value', address_2)
@@ -780,16 +779,15 @@
         $('select[name="calc_shipping_provinces"]').each(function() {
             var $this = $(this),
                 stc = ''
-            c.forEach(function(i, e) {
-                e += +1
-                stc += '<option value=' + e + '>' + i + '</option>'
+            c.forEach(function(i) {
+                stc += '<option value="' + i + '">' + i + '</option>'
                 $this.html('<option value="">Tỉnh / Thành phố</option>' + stc)
                 if (address_1 = localStorage.getItem('address_1_saved')) {
-                $('select[name="calc_shipping_provinces"] option').each(function() {
+                /*$('select[name="calc_shipping_provinces"] option').each(function() {
                     if ($(this).text() == address_1) {
-                    $(this).attr('selected', '')
+                        $(this).attr('selected', '');                     
                     }
-                })
+                })*/
                 $('input.billing_address_1').attr('value', address_1)
                 }
                 $this.on('change', function(i) {
@@ -807,7 +805,7 @@
                     localStorage.setItem('district', district)
                     $('select[name="calc_shipping_district"]').on('change', function() {
                         var target = $(this).children('option:selected')
-                        target.attr('selected', '')
+                        //target.attr('selected', '')
                         $('select[name="calc_shipping_district"] option').not(target).removeAttr('selected')
                         var address_2 = target.text()
                         $('input.billing_address_2').attr('value', address_2)

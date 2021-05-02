@@ -379,6 +379,52 @@ if(isset($_SESSION['userinfor'])) {
             </div>
          </div>
       </div>
+
+      <!--Animation for cart-shop-->
+      <style>
+         body{
+            position: relative;
+         }
+         .img-product-fly{
+            position: absolute;
+            z-index: 999999999;
+            width: 40px;
+            height: 40px;
+            object-fit: fill;
+            border-radius: 100%;
+            border: 2px solid blanchedalmond;
+            transition: all 0.9s ease;
+         }
+      </style>
+      <script>
+         $(document).on('click','.add-cart',function(e){
+            e.preventDefault();
+            var parent = $(this).parents('.products');
+            var cart = $(document).find('#card-shop');
+            var src = parent.find('img').attr('src');
+
+            var gotoX = parent.offset().left;
+            var gotoY = parent.offset().top;
+
+            $('<img />',{
+               class : 'img-product-fly',
+               src: src
+            }).appendTo('body').css({
+               'top': gotoY,
+               'left': parseInt(gotoX) + parseInt(parent.width()) - 50
+            })
+
+            setTimeout(function(){
+               $(document).find('.img-product-fly').css({
+               'top': cart.offset().top,
+               'left': cart.offset().left
+               });
+               setTimeout(function(){
+                  $(document).find('.img-product-fly').remove();
+               }, 900)
+            }, 50);
+         });
+      </script>
       <!-- Bootstrap core JavaScript==================================================-->
 	  <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
 	  <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
